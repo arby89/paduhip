@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>HIP Online Reporting</title>
+  <link href="font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Lato:300,400|Fjalla+One' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="css/style2.css">
+<script type="text/javascript" src="js/record.js"></script>
+
+</head>
+
+<body>
+<header>
+  <h2 class="full"><em>HIP ONLINE REPORTING</em></h2> 
+</header>
+
+<form id="reportForm">
+  <!--  General -->
+  <div class="form-group">
+    <h2 class="heading full">General</h2>
+    <div class="controls full">
+      <input type="email" id="email" class="floatLabel" name="email" required >
+      <label for="email">Email</label>
+    </div>
+	<div class="controls full">
+      <select class="floatLabel" id="schoolName" required >
+        <option value=""></option>
+        <option value="A010-PPD BATANG PADANG;AAA0001-MAKTAB RENDAH SAINS MARA FELDA">A010-PPD BATANG PADANG      |      AAA0001-MAKTAB RENDAH SAINS MARA FELDA</option>
+		<option value="A010-PPD BATANG PADANG;ABA0001-SEKOLAH KEBANGSAAN TOH TANDEWA SAKTI">A010-PPD BATANG PADANG      |      ABA0001-SEKOLAH KEBANGSAAN TOH TANDEWA SAKTI</option>
+      </select>
+	  <label for="schoolName">School Name</label>
+    </div>
+	<div class="controls half">
+      <input type="number" id="studentEnrolment" class="floatLabel" name="studentEnrolment" required >
+      <label for="studentEnrolment">Student Enrolment</label>
+    </div>
+  </div>
+  <!--  Mean Score -->
+  <div class="form-group">
+    <h2 class="heading full custom-heading">Mean Score</h2>
+    <div class="controls half">
+      <input type="number" id="meanSchoolHead" class="floatLabel" onkeyup="calculateTotal()" name="meanSchoolHead" value="0" min="0" max="80" required>
+      <label for="meanSchoolHead">School Head</label>
+    </div>
+	<div class="controls half">
+      <input type="number" id="meanTeachers" class="floatLabel" onkeyup="calculateTotal()" name="meanTeachers" value="0" min="0" max="80" required>
+      <label for="meanTeachers">Teachers</label>
+    </div>
+	<div class="controls half">
+      <input type="number" id="meanStudents" class="floatLabel" onkeyup="calculateTotal()" name="meanStudents" value="0" min="0" max="80" required>
+      <label for="meanStudents">Students</label>
+    </div>
+	<div class="controls half">
+      <input type="number" id="meanParentCommunity" class="floatLabel" onkeyup="calculateTotal()" name="meanParentCommunity" value="0" min="0" max="80"  required>
+      <label for="meanParentCommunity">Parent & Community</label>
+    </div>
+  </div>
+  <!--  Level of Immersiveness -->
+  <div class="form-group">
+    <h2 class="heading full custom-heading">Level of Immersiveness</h2>
+    <div class="controls half">
+      <input type="number" id="immTotalScore" class="floatLabel" name="immTotalScore" value="0" disabled >
+      <label for="immTotalScore">Total Score</label>
+    </div>
+	<div class="controls half">
+      <input type="text" id="immLevel" class="floatLabel" name="immLevel" value="Level 1" disabled >
+      <label for="immLevel">Level</label>
+    </div>
+  </div>
+  <!--  Student Participation - In-Class -->
+  <div class="form-group">
+    <h2 class="heading full">Student Participation - In-Class</h2>
+    <div class="controls full">
+      <textarea name="inClassActivities" class="floatLabel" id="inClassActivities"></textarea>
+      <label for="inClassActivities">Activities</label>
+    </div>
+	<div class="controls full">
+      <textarea name="inClassObjective" class="floatLabel" id="inClassObjective"></textarea>
+      <label for="inClassObjective">Objective(s)</label>
+    </div>
+	<div class="controls full">
+      <input type="text" id="inClassNoInvolved" class="floatLabel" name="inClassNoInvolved" onkeyup="calculateTotal()">
+      <label for="inClassNoInvolved">Total No. of Students Involved</label>
+    </div>
+	<div class="controls half">
+      <input type="text" id="inClassPercentage" class="floatLabel" name="inClassPercentage" value="0" disabled >
+      <label for="inClassPercentage">Percentage</label>
+    </div>
+  </div>
+  <!--  Student Participation - Out-of-Class -->
+  <div class="form-group">
+    <h2 class="heading full">Student Participation - Out-of-Class</h2>
+    <div class="controls full">
+      <textarea name="outClassActivities" class="floatLabel" id="outClassActivities"></textarea>
+      <label for="outClassActivities">Activities</label>
+    </div>
+	<div class="controls full">
+      <textarea name="outClassObjective" class="floatLabel" id="outClassObjective"></textarea>
+      <label for="outClassObjective">Objective(s)</label>
+    </div>
+	<div class="controls full">
+      <input type="text" id="outClassNoInvolved" class="floatLabel" name="outClassNoInvolved" onkeyup="calculateTotal()">
+      <label for="outClassNoInvolved">Total No. of Students Involved</label>
+    </div>
+	<div class="controls half">
+      <input type="text" id="outClassPercentage" class="floatLabel" name="outClassPercentage" value="0" disabled >
+      <label for="outClassPercentage">Percentage</label>
+    </div>
+  </div>
+  <!--  Student Participation - Extra-Class -->
+  <div class="form-group">
+    <h2 class="heading full">Student Participation - Extra Class</h2>
+    <div class="controls full">
+      <textarea name="extraClassActivities" class="floatLabel" id="extraClassActivities"></textarea>
+      <label for="extraClassActivities">Activities</label>
+    </div>
+	<div class="controls full">
+      <textarea name="extraClassObjective" class="floatLabel" id="extraClassObjective"></textarea>
+      <label for="extraClassObjective">Objective(s)</label>
+    </div>
+	<div class="controls full">
+      <input type="text" id="extraClassNoInvolved" class="floatLabel" name="extraClassNoInvolved" onkeyup="calculateTotal()">
+      <label for="extraClassNoInvolved">Total No. of Students Involved</label>
+    </div>
+	<div class="controls half">
+      <input type="text" id="extraClassPercentage" class="floatLabel" name="extraClassPercentage" value="0" disabled >
+      <label for="extraClassPercentage">Percentage</label>
+    </div>
+  </div>
+  <!--  Student Participation - Outreach -->
+  <div class="form-group">
+    <h2 class="heading full">Student Participation - Outreach</h2>
+    <div class="controls full">
+      <textarea name="outReachActivities" class="floatLabel" id="outReachActivities"></textarea>
+      <label for="outReachActivities">Activities</label>
+    </div>
+	<div class="controls full">
+      <textarea name="outReachObjective" class="floatLabel" id="outReachObjective"></textarea>
+      <label for="outReachObjective">Objective(s)</label>
+    </div>
+	<div class="controls full">
+      <input type="text" id="outReachNoInvolved" class="floatLabel" name="outReachNoInvolved" onkeyup="calculateTotal()">
+      <label for="outReachNoInvolved">Total No. of Students Involved</label>
+    </div>
+	<div class="controls half">
+      <input type="text" id="outReachPercentage" class="floatLabel" name="outReachPercentage" value="0" disabled >
+      <label for="outReachPercentage">Percentage</label>
+    </div>
+	<div class="controls full">
+      <textarea name="outReachPartners" class="floatLabel" id="outReachPartners"></textarea>
+      <label for="outReachPartners">Outreach Partners</label>
+    </div>
+  </div>
+  <!--  Additional Information -->
+  <div class="form-group">
+    <h2 class="heading full">Additional Information</h2>
+    <div class="controls full">
+      <textarea name="addInfoSuccessStories" class="floatLabel" id="addInfoSuccessStories"></textarea>
+      <label for="addInfoSuccessStories">Success Stories</label>
+    </div>
+	<div class="controls full">
+      <textarea name="addInfoChallenges" class="floatLabel" id="addInfoChallenges"></textarea>
+      <label for="addInfoChallenges">Challenges</label>
+	  <input class="full" type="button" name="SEND" value="Send Report" id="SEND" onclick="validateForm()" />
+    </div>
+  </div>
+	<div class="form-group">
+	<div class="controls full">
+		<div id="status" style="display:none;"></div>
+		<div id="myModal" class="modal">
+		  <!-- Modal content -->
+		  <div class="modal-content">
+			<span class="close">&times;</span>
+			<h2 id="modal-value" class="heading full"></h2>
+		  </div>
+		</div>
+		<div id="popupModal" class="modal">
+		  <!-- PopupModal content -->
+		  <div class="modal-content">
+			<span class="close2">&times;</span>
+			<h2 id="popup-modal-value" class="heading full"></h2>
+		  </div>
+		</div>
+	</div>
+	</div>
+</form>
+
+<script src='js/jquery.min.js'></script>
+<script src="js/index.js"></script>
+
+</body>
+</html>
