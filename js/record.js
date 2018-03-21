@@ -1,4 +1,5 @@
-var purpose = '';
+var purpose = 'new';
+var cDuplicate = 0;
 
 (function(_go_) {
 	function Sender(url, json, onreadystatechange, ready) {
@@ -63,7 +64,8 @@ function send() {
 			'outReachPartners' : document.getElementById('outReachPartners').value,
 			'addInfoSuccessStories' : document.getElementById('addInfoSuccessStories').value,
 			'addInfoChallenges' : document.getElementById('addInfoChallenges').value,
-			'purpose' : purpose
+			'purpose' : purpose,
+			'cDuplicate' : cDuplicate
 		}, function(xmlhttp) {
 			document.getElementById('status').innerHTML = JSON.stringify(xmlhttp);
 		}, function(xmlhttp) {
@@ -78,7 +80,7 @@ function send() {
 function traceOutput(check){
 	var modal = document.getElementById('myModal');
 	var span = document.getElementsByClassName("close")[0];
-	if (check == document.getElementById('schoolName').value){
+	if (check[0] == document.getElementById('schoolName').value){
 		document.getElementById('modal-value').innerHTML = "This school record already exists.";
 		modal.style.display = "block";
 		var btn  = document.createElement("INPUT"),
@@ -91,8 +93,8 @@ function traceOutput(check){
 		btn2.id = 'updateRecord';
 		document.getElementById('modal-value').appendChild(btn);
 		document.getElementById('modal-value').appendChild(btn2);
-		$('#amendment').click(function() { purpose = 'Amendment'; send(); purpose = ''; });
-		$('#updateRecord').click(function() { purpose = 'Update'; send(); purpose = ''; });
+		$('#amendment').click(function() { purpose = 'Amendment'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
+		$('#updateRecord').click(function() { purpose = 'Update'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
 	}
 	else{
 		document.getElementById('modal-value').innerHTML = "New record successfully added.";
