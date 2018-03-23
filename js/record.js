@@ -97,7 +97,9 @@ function traceOutput(check){
 		$('#updateRecord').click(function() { purpose = 'Update'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
 	}
 	else{
-		document.getElementById('modal-value').innerHTML = "New record successfully added.";
+		var successMsg = '<div class="mdlSuccess"><h1>Thank You!</h1>';
+		successMsg += '<p>Your online reporting has been successfully sent.<br>Please check your email for the copy of your reporting.</p></div>';
+		document.getElementById('modal-value').innerHTML = successMsg;
 		document.getElementById("reportForm").reset();
         $(".chosen-container-single .chosen-single span").text("");
 		modal.style.display = "block";
@@ -120,6 +122,7 @@ function validateForm() {
 		meanStudents = parseFloat(document.getElementById('meanStudents').value),
 		meanParentCommunity = parseFloat(document.getElementById('meanParentCommunity').value)
 		schoolName = document.getElementById('schoolName').value;
+		studentEnrolment = document.getElementById('studentEnrolment').value;
 	
 	var atpos = email.indexOf("@");
 	var dotpos = email.lastIndexOf(".");
@@ -133,6 +136,10 @@ function validateForm() {
 	}
 	else if (schoolName == ''){
 		modalErrorPopop("Select school name.");
+		return false;
+	}
+	else if (studentEnrolment == ''){
+		modalErrorPopop("Enter student enrolment value.");
 		return false;
 	}
 	else{send();}

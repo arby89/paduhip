@@ -348,11 +348,35 @@ label[for="schoolName"] {
     margin-bottom: 20px;
 	padding-left: 18px;
 }
+
+.mdlSuccess {
+    text-transform: none;
+    text-align: center;
+}
+
+.mdlSuccess > h1 {
+    margin-bottom: 15px;
+}
+
+.mdlSuccess > p {
+    line-height: 25px;
+}
+
+#newReport {
+    float: right;
+    margin-top: 10px;
+    padding: 10px;
+}
+
 @media screen and (max-width: 960px) {
   form {
     width: 100%;
     padding: 2em 10%;
   }
+  
+  .modal-content {
+    width: 90%;
+}
 }
 @media only screen and (max-width: 600px) {
 .half {
