@@ -45,10 +45,6 @@ function send() {
 			'meanParentCommunity' : document.getElementById('meanParentCommunity').value,
 			'immTotalScore' : document.getElementById('immTotalScore').value,
 			'immLevel' : document.getElementById('immLevel').value,
-			'inClassActivities' : document.getElementById('inClassActivities').value,
-			'inClassObjective' : document.getElementById('inClassObjective').value,
-			'inClassNoInvolved' : document.getElementById('inClassNoInvolved').value,
-			'inClassPercentage' : document.getElementById('inClassPercentage').value,
 			'outClassActivities' : document.getElementById('outClassActivities').value,
 			'outClassObjective' : document.getElementById('outClassObjective').value,
 			'outClassNoInvolved' : document.getElementById('outClassNoInvolved').value,
@@ -95,6 +91,15 @@ function traceOutput(check){
 		document.getElementById('modal-value').appendChild(btn2);
 		$('#amendment').click(function() { purpose = 'Amendment'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
 		$('#updateRecord').click(function() { purpose = 'Update'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
+		span.onclick = function() {
+			modal.style.display = "none";
+		}
+		
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+			}
+		}
 	}
 	else{
 		var successMsg = '<div class="mdlSuccess"><h1>Thank You!</h1>';
@@ -103,15 +108,18 @@ function traceOutput(check){
 		document.getElementById("reportForm").reset();
         $(".chosen-container-single .chosen-single span").text("");
 		modal.style.display = "block";
-	}
-	span.onclick = function() {
-    modal.style.display = "none";
-	}
-	
-	window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
+		
+		span.onclick = function() {
+			modal.style.display = "none";
+			location.reload();
+		}
+		
+		window.onclick = function(event) {
+			if (event.target == modal) {
+				modal.style.display = "none";
+				location.reload();
+			}
+		}
 	}
 }
 
@@ -130,16 +138,24 @@ function validateForm() {
 		modalErrorPopop("Email not valid.");
 		return false;
 	}
-	else if (meanSchoolHead > 80 || meanTeachers > 80 || meanStudents > 80 || meanParentCommunity > 80){
-		modalErrorPopop("Mean score must lower than 80.");
-		return false;
-	}
 	else if (schoolName == ''){
 		modalErrorPopop("Select school name.");
 		return false;
 	}
 	else if (studentEnrolment == ''){
 		modalErrorPopop("Enter student enrolment value.");
+		return false;
+	}
+	else if (meanSchoolHead > 80 || meanTeachers > 80 || meanStudents > 80 || meanParentCommunity > 80){
+		modalErrorPopop("Mean score must lower than 80.");
+		return false;
+	}
+	else if (isNaN(meanSchoolHead) == true || isNaN(meanTeachers) == true || isNaN(meanStudents) == true || isNaN(meanParentCommunity) == true){
+		modalErrorPopop("Please enter mean score.");
+		return false;
+	}
+	else if (ValidCaptcha() == false){
+		modalErrorPopop("Invalid captcha code.");
 		return false;
 	}
 	else{send();}
@@ -150,11 +166,11 @@ function meanLimit(){
 		meanTeachers = document.getElementById('meanTeachers'),
 		meanStudents = document.getElementById('meanStudents'),
 		meanParentCommunity = document.getElementById('meanParentCommunity');
-	
-	meanSchoolHead.value=Math.min(Math.round(80),meanSchoolHead.value);
-	meanTeachers.value=Math.min(Math.round(80),meanTeachers.value);
-	meanStudents.value=Math.min(Math.round(80),meanStudents.value);
-	meanParentCommunity.value=Math.min(Math.round(80),meanParentCommunity.value);
+
+	( meanSchoolHead.value == '') ? meanSchoolHead.value = '' : meanSchoolHead.value = Math.min(Math.max(meanSchoolHead.value, 0), 80);
+	( meanTeachers.value == '' || isNaN(meanTeachers.value) ) ? meanTeachers.value = '' : meanTeachers.value = Math.min(Math.max(parseFloat(meanTeachers.value), 0), 80);
+	( meanStudents.value == '' || isNaN(meanStudents.value) ) ? meanStudents.value = '' : meanStudents.value = Math.min(Math.max(parseFloat(meanStudents.value), 0), 80);
+	( meanParentCommunity.value == '' || isNaN(meanParentCommunity.value) ) ? meanParentCommunity.value = '' : meanParentCommunity.value = Math.min(Math.max(parseFloat(meanParentCommunity.value), 0), 80);
 }
 
 function calculateTotal() {	
@@ -165,6 +181,11 @@ function calculateTotal() {
 		meanTeachers = parseFloat(document.getElementById('meanTeachers').value),
 		meanStudents = parseFloat(document.getElementById('meanStudents').value),
 		meanParentCommunity = parseFloat(document.getElementById('meanParentCommunity').value);
+		
+	isNaN(meanSchoolHead) ? meanSchoolHead = 0: meanSchoolHead;
+	isNaN(meanTeachers) ? meanTeachers = 0: meanTeachers;
+	isNaN(meanStudents) ? meanStudents = 0: meanStudents;
+	isNaN(meanParentCommunity) ? meanParentCommunity = 0: meanParentCommunity;
 	
 	var totalAmt = meanSchoolHead + meanTeachers + meanStudents + meanParentCommunity;
 	document.getElementById('immTotalScore').value = totalAmt;
@@ -179,16 +200,6 @@ function calculateTotal() {
 	var studentEnrolment = parseInt(document.getElementById('studentEnrolment').value);
 	if(isNaN(studentEnrolment))
 		studentEnrolment = 0;
-	
-	// in class
-	var inClassNoInvolved = parseInt(document.getElementById('inClassNoInvolved').value);
-	if(isNaN(inClassNoInvolved))
-		inClassNoInvolved = 0;
-	
-	var totalInClass = inClassNoInvolved / studentEnrolment * 100;
-	if(isNaN(totalInClass))
-		totalInClass = 0;
-	document.getElementById('inClassPercentage').value = parseFloat(totalInClass).toFixed(2);
 	
 	// out class
 	var outClassNoInvolved = parseInt(document.getElementById('outClassNoInvolved').value);
@@ -221,12 +232,7 @@ function calculateTotal() {
 	document.getElementById('outReachPercentage').value = parseFloat(totalOutReach).toFixed(2);
 	
 	//limit checker
-	if(inClassNoInvolved > studentEnrolment){
-		document.getElementById('inClassNoInvolved').value = 0;
-		document.getElementById('inClassPercentage').value = 0;
-		modalPopop(studentEnrolment);
-	}
-	else if(outClassNoInvolved > studentEnrolment){
+	if(outClassNoInvolved > studentEnrolment){
 		document.getElementById('outClassNoInvolved').value = 0;
 		document.getElementById('outClassPercentage').value = 0;
 		modalPopop(studentEnrolment);
@@ -286,4 +292,135 @@ function modalErrorPopop(errorText){
 	if (charCode > 31 && (charCode < 48 || charCode > 57))
 		return false;
 	return true;
+}
+
+ function isDecimalKey(evt){
+	var charCode = (evt.which) ? evt.which : event.keyCode
+	if (charCode > 31 && (charCode < 48 || charCode > 57) && charCode != 46 )
+		return false;
+	return true;
+}
+
+function customCaptcha(){
+	var a = Math.ceil(Math.random() * 9)+ '';
+	var b = Math.ceil(Math.random() * 9)+ '';
+	var c = Math.ceil(Math.random() * 9)+ '';
+	var d = Math.ceil(Math.random() * 9)+ '';
+	var e = Math.ceil(Math.random() * 9)+ '';
+
+	var code = a + b + c + d + e;
+	document.getElementById("txtCaptcha").value = code;
+	document.getElementById("CaptchaDiv").innerHTML = code;
+}
+
+// Validate input against the generated number
+function ValidCaptcha(){
+	var str1 = removeSpaces(document.getElementById('txtCaptcha').value);
+	var str2 = removeSpaces(document.getElementById('CaptchaInput').value);
+	if (str1 == str2){
+		return true;
+	}else{
+		return false;
+	}
+}
+
+// Remove the spaces from the entered and generated code
+function removeSpaces(string){
+return string.split(' ').join('');
+}
+
+//decimal checker
+function toHtmlNumericInput(inputElementId, useCommaAsDecimalSeparator) {
+	var textbox = document.getElementById(inputElementId);
+
+	// called when key is pressed
+	// in keydown, we get the keyCode
+	// in keyup, we get the input.value (including the charactor we've just typed
+	textbox.addEventListener("keydown", function _OnNumericInputKeyDown(e) {
+		var key = e.which || e.keyCode; // http://keycode.info/
+
+		if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+			// alphabet
+			key >= 65 && key <= 90 ||
+			// spacebar
+			key == 32) {
+			e.preventDefault();
+			return false;
+		}
+
+		if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+			// numbers
+			key >= 48 && key <= 57 ||
+			// Numeric keypad
+			key >= 96 && key <= 105 ||
+
+			// allow: Ctrl+A
+			(e.keyCode == 65 && e.ctrlKey === true) ||
+			// allow: Ctrl+C
+			(key == 67 && e.ctrlKey === true) ||
+			// Allow: Ctrl+X
+			(key == 88 && e.ctrlKey === true) ||
+
+			// allow: home, end, left, right
+			(key >= 35 && key <= 39) ||
+			// Backspace and Tab and Enter
+			key == 8 || key == 9 || key == 13 ||
+			// Del and Ins
+			key == 46 || key == 45) {
+			return true;
+		}
+
+
+		var v = this.value; // v can be null, in case textbox is number and does not valid
+		// if minus, dash 
+		if (key == 109 || key == 189) {
+			// if already has -, ignore the new one
+			if (v[0] === '-') {
+				// console.log('return, already has - in the beginning');
+				return false;
+			}
+		}
+
+		if (!e.shiftKey && !e.altKey && !e.ctrlKey &&
+			// comma, period and numpad.dot
+			key == 190 || key == 188 || key == 110) {
+			// console.log('already having comma, period, dot', key);
+			if (/[\.,]/.test(v)) {
+				// console.log('return, already has , . somewhere');
+				return false;
+			}
+		}
+	});
+
+	textbox.addEventListener("keyup", function _OnNumericInputKeyUp(e) {
+		var v = this.value;
+
+		if(false) {
+		// if (+v) { 
+			// this condition check if convert to number success, let it be
+			// put this condition will have better performance
+			// but I haven't test it with cultureInfo = comma decimal separator, so, to support both . and , as decimalSeparator, I remove this condition
+			//                      "1000"  "10.9"  "1,000.9"   "011"   "10c"   "$10"
+			//+str, str*1, str-0    1000    10.9    NaN         11      NaN     NaN
+		} else if (v) {
+			// refine the value
+			
+			// this replace also remove the -, we add it again if needed
+			v = (v[0] === '-' ? '-' : '') + 
+				(useCommaAsDecimalSeparator ? 
+					v.replace(/[^0-9\,]/g, '') : 
+					v.replace(/[^0-9\.]/g, ''));
+			
+			// remove all decimalSeparator that have other decimalSeparator following. After this processing, only the last decimalSeparator is kept.
+			if(useCommaAsDecimalSeparator){
+				v = v.replace(/,(?=(.*),)+/g, '');
+			} else {
+				v = v.replace(/\.(?=(.*)\.)+/g, '');
+			}
+
+			//console.log(this.value, v);
+			this.value = v; // update value only if we changed it
+		}
+	});
+
 }
