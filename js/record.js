@@ -35,7 +35,7 @@ var cDuplicate = 0;
 
 function send() {
 	try {
-		new Sender('https://script.google.com/macros/s/AKfycbwmvjzdsCyzitWMvI4gfJPSRLTrBw7e_tKG8-QbxYEBJr42LrYc/exec', {
+		new Sender('https://script.google.com/macros/s/AKfycbzxhkIFP5UrsFsdNtH1aEFwCgXw_Gj1I2XZMsHxwgsfTXD-Svs/exec', {
 			'email' : document.getElementById('email').value,
 			'schoolName' : document.getElementById('schoolName').value,
 			'studentEnrolment' : document.getElementById('studentEnrolment').value,
@@ -79,18 +79,18 @@ function traceOutput(check){
 	if (check[0] == document.getElementById('schoolName').value){
 		document.getElementById('modal-value').innerHTML = "This school record already exists.";
 		modal.style.display = "block";
-		var btn  = document.createElement("INPUT"),
-		btn2  = document.createElement("INPUT");
+		var btn  = document.createElement("INPUT");
+		//btn2  = document.createElement("INPUT");
 		btn.value = 'Amendment';
 		btn.type = 'button';
 		btn.id = 'amendment';
-		btn2.value = 'Update';
-		btn2.type = 'button';
-		btn2.id = 'updateRecord';
+		//btn2.value = 'Update';
+		//btn2.type = 'button';
+		//btn2.id = 'updateRecord';
 		document.getElementById('modal-value').appendChild(btn);
-		document.getElementById('modal-value').appendChild(btn2);
+		//document.getElementById('modal-value').appendChild(btn2);
 		$('#amendment').click(function() { purpose = 'Amendment'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
-		$('#updateRecord').click(function() { purpose = 'Update'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
+		//$('#updateRecord').click(function() { purpose = 'Update'; cDuplicate = check[1]; send(); purpose = 'new'; cDuplicate = 0; });
 		span.onclick = function() {
 			modal.style.display = "none";
 		}
@@ -102,6 +102,8 @@ function traceOutput(check){
 		}
 	}
 	else{
+		window.location.replace("thankyou.html");
+		/*
 		var successMsg = '<div class="mdlSuccess"><h1>Thank You!</h1>';
 		successMsg += '<p>Your online reporting has been successfully sent.<br>Please check your email for the copy of your reporting.</p></div>';
 		document.getElementById('modal-value').innerHTML = successMsg;
@@ -119,7 +121,7 @@ function traceOutput(check){
 				modal.style.display = "none";
 				location.reload();
 			}
-		}
+		}*/
 	}
 }
 
@@ -128,9 +130,21 @@ function validateForm() {
 	var meanSchoolHead = parseFloat(document.getElementById('meanSchoolHead').value),
 		meanTeachers = parseFloat(document.getElementById('meanTeachers').value),
 		meanStudents = parseFloat(document.getElementById('meanStudents').value),
-		meanParentCommunity = parseFloat(document.getElementById('meanParentCommunity').value)
-		schoolName = document.getElementById('schoolName').value;
-		studentEnrolment = document.getElementById('studentEnrolment').value;
+		meanParentCommunity = parseFloat(document.getElementById('meanParentCommunity').value),
+		schoolName = document.getElementById('schoolName').value,
+		studentEnrolment = document.getElementById('studentEnrolment').value,
+		outClassActivities = document.getElementById('outClassActivities').value,
+		outClassObjective = document.getElementById('outClassObjective').value,
+		outClassNoInvolved = document.getElementById('outClassNoInvolved').value,
+		extraClassActivities = document.getElementById('extraClassActivities').value,
+		extraClassObjective = document.getElementById('extraClassObjective').value,
+		extraClassNoInvolved = document.getElementById('extraClassNoInvolved').value,
+		outReachActivities = document.getElementById('outReachActivities').value,
+		outReachObjective = document.getElementById('outReachObjective').value,
+		outReachNoInvolved = document.getElementById('outReachNoInvolved').value,
+		outReachPartners = document.getElementById('outReachPartners').value,
+		addInfoSuccessStories = document.getElementById('addInfoSuccessStories').value,
+		addInfoChallenges = document.getElementById('addInfoChallenges').value;
 	
 	var atpos = email.indexOf("@");
 	var dotpos = email.lastIndexOf(".");
@@ -154,8 +168,56 @@ function validateForm() {
 		modalErrorPopop("Please enter mean score.");
 		return false;
 	}
-	else if (ValidCaptcha() == false){
-		modalErrorPopop("Invalid captcha code.");
+	else if (outClassActivities == ''){
+		modalErrorPopop("Enter out of class activities field.");
+		return false;
+	}
+	else if (outClassObjective == ''){
+		modalErrorPopop("Enter out of class objective field.");
+		return false;
+	}
+	else if (outClassNoInvolved == ''){
+		modalErrorPopop("Enter out of class number of student involved.");
+		return false;
+	}
+	else if (extraClassActivities == ''){
+		modalErrorPopop("Enter extra class activities field.");
+		return false;
+	}
+	else if (extraClassObjective == ''){
+		modalErrorPopop("Enter extra class objective field.");
+		return false;
+	}
+	else if (extraClassNoInvolved == ''){
+		modalErrorPopop("Enter extra class number of student involved.");
+		return false;
+	}
+	else if (outReachActivities == ''){
+		modalErrorPopop("Enter outreach activities field.");
+		return false;
+	}
+	else if (outReachObjective == ''){
+		modalErrorPopop("Enter outreach objective field.");
+		return false;
+	}
+	else if (outReachNoInvolved == ''){
+		modalErrorPopop("Enter outreach number of student involved.");
+		return false;
+	}
+	else if (outReachPartners == ''){
+		modalErrorPopop("Enter outreach partners field.");
+		return false;
+	}
+	else if (addInfoSuccessStories == ''){
+		modalErrorPopop("Enter success stories field.");
+		return false;
+	}
+	else if (addInfoChallenges == ''){
+		modalErrorPopop("Enter challenges field.");
+		return false;
+	}
+	else if (grecaptcha.getResponse().length == 0){
+		modalErrorPopop("Please solve the captcha.");
 		return false;
 	}
 	else{send();}
@@ -167,10 +229,29 @@ function meanLimit(){
 		meanStudents = document.getElementById('meanStudents'),
 		meanParentCommunity = document.getElementById('meanParentCommunity');
 
-	( meanSchoolHead.value == '') ? meanSchoolHead.value = '' : meanSchoolHead.value = Math.min(Math.max(meanSchoolHead.value, 0), 80);
-	( meanTeachers.value == '' || isNaN(meanTeachers.value) ) ? meanTeachers.value = '' : meanTeachers.value = Math.min(Math.max(parseFloat(meanTeachers.value), 0), 80);
-	( meanStudents.value == '' || isNaN(meanStudents.value) ) ? meanStudents.value = '' : meanStudents.value = Math.min(Math.max(parseFloat(meanStudents.value), 0), 80);
-	( meanParentCommunity.value == '' || isNaN(meanParentCommunity.value) ) ? meanParentCommunity.value = '' : meanParentCommunity.value = Math.min(Math.max(parseFloat(meanParentCommunity.value), 0), 80);
+	if(meanSchoolHead.value != '')
+		if(meanSchoolHead.value < 0)
+			meanSchoolHead.value = 0;
+		else if(meanSchoolHead.value > 80)
+			meanSchoolHead.value = 80;
+		
+	if(meanTeachers.value != '')
+		if(meanTeachers.value < 0)
+			meanTeachers.value = 0;
+		else if(meanTeachers.value > 80)
+			meanTeachers.value = 80;
+		
+	if(meanStudents.value != '')
+		if(meanStudents.value < 0)
+			meanStudents.value = 0;
+		else if(meanStudents.value > 80)
+			meanStudents.value = 80;
+		
+	if(meanParentCommunity.value != '')
+		if(meanParentCommunity.value < 0)
+			meanParentCommunity.value = 0;
+		else if(meanParentCommunity.value > 80)
+			meanParentCommunity.value = 80;
 }
 
 function calculateTotal() {	
